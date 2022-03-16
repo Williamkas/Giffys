@@ -6,10 +6,14 @@ export default function getGifs({keyword='homero'}={}){
     return fetch(apiURL) //El fetch nos devuelve una promesa
       .then(res => res.json())
       .then(response => {
-        const {data} = response
+        const {data = []} = response
         if (Array.isArray(data)){ //El método Array.isArray devuelve true si el contenido de un array y false si no lo es.
-            const gifs = data.map(image => image.images.downsized_medium.url)
-            return gifs
+          const gifs = data.map(image => {
+            const { images, title, id } = image;
+            const { url } = images.downsized_medium;
+            return { title, id, url }
+          })
+          return gifs
         }
       })
   }
